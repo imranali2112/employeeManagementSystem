@@ -1,0 +1,143 @@
+<router-outlet></router-outlet>
+<div class="container-fluid" style="max-width: 1440px;">
+  <div class="row m-3 curd-app justify-content-center">
+    <div class="w-80 align-items-center">
+      <h2
+        class="mx-auto mb-3 p-2 text-green bg-success text-white rounded d-flex align-items-center justify-content-center">
+        Employee Management System
+      </h2>
+    </div>
+    <!-- Employee List Section -->
+    <div class="col-sm-12 col-xl-8 order-2 order-xl-1 mt-3 mt-xl-0">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h6 class="mb-0">Employee List</h6>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead class="bg-light">
+              <tr>
+                <th>Emp ID</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Contact No</th>
+                <th>Address</th>
+                <th>Pin Code</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of getEmployees(); trackBy: trackByEmpId">
+                <td>{{ data.empId }}</td>
+                <td>{{ data.name }}</td>
+                <td>{{ data.city }}</td>
+                <td>{{ data.state }}</td>
+                <td>{{ data.contactNo }}</td>
+                <td>{{ data.address }}</td>
+                <td>{{ data.pinCode }}</td>
+                <td class="d-flex">
+                  <button class="btn btn-primary me-2" (click)="onEdit(data)">Edit</button>
+                  <button class="btn btn-danger" (click)="onDelete(data.empId)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Employee Form Section -->
+    <div class="col-sm-12 col-xl-4 order-1 order-xl-2">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">{{ selectedEmployee ? 'Edit Employee' : 'Add Employee' }}</h5>
+        </div>
+        <form [formGroup]="employeeForm">
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" formControlName="name" class="form-control" id="name">
+                @if (employeeForm.controls['name'].hasError('required') && employeeForm.controls['name'].touched) {
+                <span class="text-danger">Name is required</span>
+                } @else {
+                @if (employeeForm.controls['name'].hasError('pattern')) {
+                <span class="text-danger">Only letters allowed</span>
+                }
+                }
+              </div>
+
+              <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input type="text" formControlName="city" class="form-control" id="city">
+                @if(employeeForm.controls['city'].touched && employeeForm.controls['city'].hasError('required')){
+                <span class="text-danger">City is required</span>
+                } @else {
+                @if(employeeForm.controls['city'].hasError('pattern')){
+                <span class="text-danger">Only letter is required</span>
+
+                }
+
+                }
+              </div>
+              <div class="col-md-6">
+                <label for="state" class="form-label">State</label>
+                <input type="text" formControlName="state" class="form-control" id="state">
+                @if(employeeForm.controls['state'].touched && employeeForm.controls['state'].hasError('required')){
+                <span class="text-danger">State is required</span>
+                } @else{
+                @if(employeeForm.controls['state'].hasError('pattern')){
+                <span class="text-danger">Only letters</span>
+                }
+                }
+              </div>
+              <div class="col-md-6">
+                <label for="contact" class="form-label">Contact No</label>
+                <input type="text" formControlName="contactNo" class="form-control" id="contact">
+                @if(employeeForm.controls['contactNo'].touched &&
+                employeeForm.controls['contactNo'].hasError('required')){
+                <span class="text-danger">Contact is required</span>
+                } @else{
+                @if(employeeForm.controls['contactNo'].hasError('pattern')){
+                <span class="text-danger">Contact is 11 number</span>
+                }
+                }
+              </div>
+              <div class="col-md-6">
+                <label for="pincode" class="form-label">Pin Code</label>
+                <input type="number" formControlName="pinCode" class="form-control" id="pincode">
+                @if(employeeForm.controls['pinCode'].touched && employeeForm.controls['pinCode'].hasError('required')){
+                <span class="text-danger">Pin code is required</span>
+                } @else {
+                @if(employeeForm.controls['pinCode'].hasError('pattern')){
+                <span class="text-danger">Pin code must be 6 number</span>
+                }
+                }
+              </div>
+              <div class="col-12">
+                <label for="address" class="form-label">Address</label>
+                <textarea class="form-control" formControlName="address" id="address"></textarea>
+                <span class="text-danger"
+                  *ngIf="employeeForm.controls['address'].touched && employeeForm.controls['address'].invalid">
+                  Address is required & minimum 10 letter
+                </span>
+              </div>
+              <div class="col-md-6 mt-3">
+                <button type="button" class="btn btn-secondary w-100" (click)="onReset()">
+                  <i class="bi bi-arrow-counterclockwise"></i> Reset
+                </button>
+              </div>
+              <div class="col-md-6 mt-3">
+                <button type="button" class="btn w-100" [ngClass]="selectedEmployee ? 'btn-warning' : 'btn-success'"
+                  [disabled]="employeeForm.invalid" (click)="selectedEmployee ? onUpdate() : onSave()">
+                  <i class="bi bi-save"></i> {{ selectedEmployee ? 'Update Employee' : 'Save Employee' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
